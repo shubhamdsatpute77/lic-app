@@ -1,6 +1,6 @@
 package com.sds.backend.controller;
 
-import com.sds.backend.dto.UserDto;
+import com.sds.backend.dto.RegisterUserRequest;
 import com.sds.backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("register")
-    public void register(@Valid @RequestBody UserDto userDto) {
-        userService.register(userDto);
+    public void register(@Valid @RequestBody RegisterUserRequest registerUserRequest) {
+        userService.register(registerUserRequest);
     }
 }
