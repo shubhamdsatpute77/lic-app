@@ -1,0 +1,18 @@
+/mvnw text eol=lf
+*.cmd text eol=crlf
+
+# Auto-detect text files
+* text=auto
+
+# Force LF for scripts & Docker
+*.sh text eol=lf
+Dockerfile text eol=lf
+*.yml text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.jar binary
+*.zip binary
