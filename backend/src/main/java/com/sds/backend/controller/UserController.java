@@ -1,9 +1,11 @@
 package com.sds.backend.controller;
 
 import com.sds.backend.dto.RegisterUserRequest;
+import com.sds.backend.dto.UserResponse;
 import com.sds.backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +18,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("register")
-    public void register(@Valid @RequestBody RegisterUserRequest registerUserRequest) {
-        userService.register(registerUserRequest);
+    public ResponseEntity<UserResponse> register(@Valid @RequestBody RegisterUserRequest registerUserRequest) {
+        return ResponseEntity.ok(userService.register(registerUserRequest));
     }
 }

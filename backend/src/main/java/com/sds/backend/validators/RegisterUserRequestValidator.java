@@ -17,6 +17,6 @@ public class RegisterUserRequestValidator implements ConstraintValidator<ValidRe
             if (Objects.isNull(request.managerEmail()) || request.managerEmail().isBlank()) return false;
             return EmailValidator.getInstance().isValid(request.managerEmail());
         }
-        return false;
+        return true;
     }
 }

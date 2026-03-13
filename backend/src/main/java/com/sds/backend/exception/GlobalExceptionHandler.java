@@ -16,8 +16,12 @@ public class GlobalExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult()
                 .getFieldErrors()
-                .forEach(e -> errors.put(e.getField(), e.getDefaultMessage())
-                );
+                .forEach(e -> errors.put(e.getField(), e.getDefaultMessage()));
         return ResponseEntity.badRequest().body(errors);
+    }
+
+    @ExceptionHandler(BussinessValidationException.class)
+    public ResponseEntity<?> handleBusinessValidationErrors(BussinessValidationException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
     }
 }
