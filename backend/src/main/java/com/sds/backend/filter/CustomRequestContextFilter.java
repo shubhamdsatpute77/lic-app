@@ -12,13 +12,15 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Component
-public class RequestIdFilter extends OncePerRequestFilter {
+public class CustomRequestContextFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         String requestId = UUID.randomUUID().toString();
-        request.setAttribute(RequestContext.ID, requestId);
+        long startTime = System.currentTimeMillis();
+        RequestContext.setStartTime(request, startTime);
+        RequestContext.setRequestId(request, requestId);
 
         filterChain.doFilter(request, response);
     }
