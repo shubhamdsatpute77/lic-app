@@ -6,6 +6,7 @@ import com.sds.backend.dto.UserResponse;
 import com.sds.backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +22,6 @@ public class UserController {
     @PostMapping("register")
     @ApiResponseMeta(message = "User registered successfully")
     public ResponseEntity<UserResponse> register(@Valid @RequestBody RegisterUserRequest registerUserRequest) {
-        return ResponseEntity.ok(userService.register(registerUserRequest));
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(registerUserRequest));
     }
 }

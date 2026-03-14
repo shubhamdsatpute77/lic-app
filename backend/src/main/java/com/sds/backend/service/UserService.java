@@ -4,7 +4,8 @@ import com.sds.backend.dto.RegisterUserRequest;
 import com.sds.backend.dto.UserResponse;
 import com.sds.backend.entity.User;
 import com.sds.backend.enums.UserRole;
-import com.sds.backend.exception.BussinessValidationException;
+import com.sds.backend.exception.BadRequestException;
+import com.sds.backend.exception.ResourceNotFoundException;
 import com.sds.backend.mapper.UserMapper;
 import com.sds.backend.repository.UserDAO;
 import lombok.RequiredArgsConstructor;
@@ -19,15 +20,15 @@ public class UserService {
 
     public UserResponse register(RegisterUserRequest registerUserRequest) {
         if (userDAO.existsByEmail(registerUserRequest.email())) {
-            throw new BussinessValidationException("User with email already exist", registerUserRequest);
+            throw new BadRequestException("User with email already exist", registerUserRequest);
         }
         Optional<User> manager = userDAO.findByEmail(registerUserRequest.managerEmail());
         if (registerUserRequest.role() == UserRole.USER) {
             if (manager.isEmpty()) {
-                throw new BussinessValidationException("Manager with email not found", registerUserRequest);
+                throw new ResourceNotFoundException("Manager with email not found", registerUserRequest);
             }
             if (manager.get().getRole() != UserRole.ADMIN) {
-                throw new BussinessValidationException("Please select valid manager email", registerUserRequest);
+                throw new BadRequestException("Please select valid manager email", registerUserRequest);
             }
         }
         User user = userDAO.save(UserMapper.toEntity(registerUserRequest, manager));

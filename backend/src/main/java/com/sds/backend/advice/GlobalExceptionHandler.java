@@ -2,8 +2,10 @@ package com.sds.backend.advice;
 
 import com.sds.backend.common.ApiResponse;
 import com.sds.backend.common.RequestContext;
-import com.sds.backend.exception.BussinessValidationException;
+import com.sds.backend.exception.BadRequestException;
+import com.sds.backend.exception.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,19 +18,46 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidationErrors(MethodArgumentNotValidException ex) {
+    public ResponseEntity<?> handleValidationErrors(MethodArgumentNotValidException ex,
+                                                    HttpServletRequest request) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult()
                 .getFieldErrors()
                 .forEach(e -> errors.put(e.getField(), e.getDefaultMessage()));
-        return ResponseEntity.badRequest().body(errors);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        ApiResponse.prepare(
+                                RequestContext.getRequestId(request),
+                                RequestContext.getExecutionTime(request),
+                                "Validation failed",
+                                request.getRequestURI(),
+                                errors
+                        )
+                );
     }
 
-    @ExceptionHandler(BussinessValidationException.class)
-    public ResponseEntity<ApiResponse<Object>> handleBusinessValidationErrors(BussinessValidationException ex,
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ApiResponse<Object>> handleBusinessValidationErrors(BadRequestException ex,
                                                                               HttpServletRequest request) {
         return ResponseEntity
-                .badRequest()
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        ApiResponse.prepare(
+                                RequestContext.getRequestId(request),
+                                RequestContext.getExecutionTime(request),
+                                ex.getMessage(),
+                                request.getRequestURI(),
+                                ex.getInvalidData()
+                        )
+                );
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiResponse<Object>> handleResourceNotFoundErrors(ResourceNotFoundException ex,
+                                                                            HttpServletRequest request) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
                 .body(
                         ApiResponse.prepare(
                                 RequestContext.getRequestId(request),
