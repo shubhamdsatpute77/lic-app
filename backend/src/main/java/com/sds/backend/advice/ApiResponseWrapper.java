@@ -1,6 +1,7 @@
 package com.sds.backend.advice;
 
 import com.sds.backend.common.ApiResponse;
+import com.sds.backend.common.ApiResponseMeta;
 import com.sds.backend.common.RequestContext;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
@@ -11,6 +12,8 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
+
+import java.util.Objects;
 
 @RestControllerAdvice
 public class ApiResponseWrapper implements ResponseBodyAdvice<Object> {
@@ -33,9 +36,12 @@ public class ApiResponseWrapper implements ResponseBodyAdvice<Object> {
         String path = serverRequest.getURI().getPath();
         HttpServletRequest request = ((ServletServerHttpRequest) serverRequest).getServletRequest();
 
+        ApiResponseMeta responseMeta = returnType.getMethodAnnotation(ApiResponseMeta.class);
+
         return ApiResponse.prepare(
                 RequestContext.getRequestId(request),
                 RequestContext.getExecutionTime(request),
+                Objects.nonNull(responseMeta) ? responseMeta.message() : "Request successful",
                 path,
                 body
         );

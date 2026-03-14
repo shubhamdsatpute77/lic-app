@@ -1,5 +1,6 @@
 package com.sds.backend.controller;
 
+import com.sds.backend.common.ApiResponseMeta;
 import com.sds.backend.dto.RegisterUserRequest;
 import com.sds.backend.dto.UserResponse;
 import com.sds.backend.service.UserService;
@@ -18,6 +19,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("register")
+    @ApiResponseMeta(message = "User registered successfully")
     public ResponseEntity<UserResponse> register(@Valid @RequestBody RegisterUserRequest registerUserRequest) {
         return ResponseEntity.ok(userService.register(registerUserRequest));
     }
