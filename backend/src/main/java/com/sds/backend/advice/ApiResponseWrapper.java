@@ -1,11 +1,14 @@
 package com.sds.backend.advice;
 
 import com.sds.backend.common.ApiResponse;
+import com.sds.backend.filter.RequestTimingFilter;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
@@ -22,12 +25,16 @@ public class ApiResponseWrapper implements ResponseBodyAdvice<Object> {
                                   MethodParameter returnType,
                                   MediaType selectedContentType,
                                   Class<? extends HttpMessageConverter<?>> selectedConverterType,
-                                  ServerHttpRequest request,
-                                  ServerHttpResponse response) {
+                                  ServerHttpRequest serverRequest,
+                                  ServerHttpResponse serverResponse) {
         if (body instanceof ApiResponse) return body;
         if (body instanceof String) return body;
 
-        String path = request.getURI().getPath();
-        return ApiResponse.prepare(path, body);
+        String path = serverRequest.getURI().getPath();
+        HttpServletRequest request = ((ServletServerHttpRequest) serverRequest).getServletRequest();
+        Long startTime = (Long) request.getAttribute(RequestTimingFilter.REQUEST_START_TIME);
+        long executionTime = System.currentTimeMillis() - startTime;
+
+        return ApiResponse.prepare(executionTime, path, body);
     }
 }
