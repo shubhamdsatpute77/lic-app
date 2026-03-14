@@ -1,5 +1,6 @@
 package com.sds.backend.filter;
 
+import com.sds.backend.common.RequestContext;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,18 +9,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-
-import static com.sds.backend.common.RequestContext.START_TIME;
+import java.util.UUID;
 
 @Component
-public class RequestTimingFilter extends OncePerRequestFilter {
-
+public class RequestIdFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        long startTime = System.currentTimeMillis();
-        request.setAttribute(START_TIME, startTime);
+        String requestId = UUID.randomUUID().toString();
+        request.setAttribute(RequestContext.ID, requestId);
+
         filterChain.doFilter(request, response);
     }
 }

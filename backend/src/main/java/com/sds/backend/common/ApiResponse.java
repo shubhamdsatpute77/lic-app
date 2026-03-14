@@ -11,9 +11,9 @@ public record ApiResponse<T> (
         String path,
         T data
 ) {
-    public static <T> ApiResponse<T> prepare(Long executionTimeMs, String path, T data) {
+    public static <T> ApiResponse<T> prepare(String requestId, Long executionTimeMs, String path, T data) {
         return new ApiResponse<>(
-                UUID.randomUUID().toString(),
+                requestId,
                 LocalDateTime.now(),
                 executionTimeMs,
                 "Success",
@@ -22,9 +22,9 @@ public record ApiResponse<T> (
         );
     }
 
-    public static <T> ApiResponse<T> prepare(Long executionTimeMs, String message, String path, T data) {
+    public static <T> ApiResponse<T> prepare(String requestId, Long executionTimeMs, String message, String path, T data) {
         return new ApiResponse<>(
-                UUID.randomUUID().toString(),
+                requestId,
                 LocalDateTime.now(),
                 executionTimeMs,
                 message,

@@ -12,6 +12,9 @@ import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
+import static com.sds.backend.common.RequestContext.ID;
+import static com.sds.backend.common.RequestContext.START_TIME;
+
 @RestControllerAdvice
 public class ApiResponseWrapper implements ResponseBodyAdvice<Object> {
     @Override
@@ -32,9 +35,10 @@ public class ApiResponseWrapper implements ResponseBodyAdvice<Object> {
 
         String path = serverRequest.getURI().getPath();
         HttpServletRequest request = ((ServletServerHttpRequest) serverRequest).getServletRequest();
-        Long startTime = (Long) request.getAttribute(RequestTimingFilter.REQUEST_START_TIME);
+        Long startTime = (Long) request.getAttribute(START_TIME);
         long executionTime = System.currentTimeMillis() - startTime;
+        String requestId = (String) request.getAttribute(ID);
 
-        return ApiResponse.prepare(executionTime, path, body);
+        return ApiResponse.prepare(requestId, executionTime, path, body);
     }
 }
