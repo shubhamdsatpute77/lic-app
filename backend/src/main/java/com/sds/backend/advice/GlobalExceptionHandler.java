@@ -1,5 +1,8 @@
-package com.sds.backend.exception;
+package com.sds.backend.advice;
 
+import com.sds.backend.common.ApiResponse;
+import com.sds.backend.exception.BussinessValidationException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,7 +24,16 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BussinessValidationException.class)
-    public ResponseEntity<?> handleBusinessValidationErrors(BussinessValidationException ex) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+    public ResponseEntity<ApiResponse<Object>> handleBusinessValidationErrors(BussinessValidationException ex,
+                                                                              HttpServletRequest request) {
+        return ResponseEntity
+                .badRequest()
+                .body(
+                        ApiResponse.prepare(
+                                ex.getMessage(),
+                                request.getRequestURI(),
+                                ex.getInvalidData()
+                        )
+                );
     }
 }

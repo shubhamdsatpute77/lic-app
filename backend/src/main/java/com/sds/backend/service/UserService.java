@@ -19,15 +19,15 @@ public class UserService {
 
     public UserResponse register(RegisterUserRequest registerUserRequest) {
         if (userDAO.existsByEmail(registerUserRequest.email())) {
-            throw new BussinessValidationException("User with email already exist");
+            throw new BussinessValidationException("User with email already exist", registerUserRequest);
         }
         Optional<User> manager = userDAO.findByEmail(registerUserRequest.managerEmail());
         if (registerUserRequest.role() == UserRole.USER) {
             if (manager.isEmpty()) {
-                throw new BussinessValidationException("Manager with email not found");
+                throw new BussinessValidationException("Manager with email not found", registerUserRequest);
             }
             if (manager.get().getRole() != UserRole.ADMIN) {
-                throw new BussinessValidationException("Please select valid manager email");
+                throw new BussinessValidationException("Please select valid manager email", registerUserRequest);
             }
         }
         User user = userDAO.save(UserMapper.toEntity(registerUserRequest, manager));
