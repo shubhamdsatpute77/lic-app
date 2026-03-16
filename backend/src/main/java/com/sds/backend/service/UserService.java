@@ -9,6 +9,7 @@ import com.sds.backend.exception.ResourceNotFoundException;
 import com.sds.backend.mapper.UserMapper;
 import com.sds.backend.repository.UserDAO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,7 +17,9 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
     private final UserDAO userDAO;
+    private final PasswordEncoder passwordEncoder;
 
     public UserResponse register(RegisterUserRequest registerUserRequest) {
         if (userDAO.existsByEmail(registerUserRequest.email())) {
@@ -31,7 +34,9 @@ public class UserService {
                 throw new BadRequestException("Please select valid manager email", registerUserRequest);
             }
         }
-        User user = userDAO.save(UserMapper.toEntity(registerUserRequest, manager));
+        User user = UserMapper.toEntity(registerUserRequest, manager);
+        user.setPassword(passwordEncoder.encode(registerUserRequest.password()));
+        userDAO.save(user);
         return UserMapper.toResponse(user);
     }
 }
