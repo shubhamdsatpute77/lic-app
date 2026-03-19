@@ -14,11 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/user")
+@RequestMapping("api/auth")
 @RequiredArgsConstructor
-public class UserController {
+public class AuthController {
 
     private final UserService userService;
 
-
+    @PostMapping("register")
+    @ApiResponseMeta(message = "User registered successfully")
+    public ResponseEntity<UserResponse> register(@Valid @RequestBody RegisterUserRequest registerUserRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(registerUserRequest));
+    }
 }
