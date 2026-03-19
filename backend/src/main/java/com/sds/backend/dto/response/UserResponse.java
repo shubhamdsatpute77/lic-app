@@ -1,4 +1,4 @@
-package com.sds.backend.dto;
+package com.sds.backend.dto.response;
 
 import com.sds.backend.enums.UserRole;
 

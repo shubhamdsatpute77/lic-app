@@ -7,6 +7,8 @@ import com.sds.backend.exception.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -65,6 +67,38 @@ public class GlobalExceptionHandler {
                                 ex.getMessage(),
                                 request.getRequestURI(),
                                 ex.getInvalidData()
+                        )
+                );
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiResponse<Object>> handleBadCredentialsError(BadCredentialsException ex,
+                                                                         HttpServletRequest request) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(
+                        ApiResponse.prepare(
+                                RequestContext.getRequestId(request),
+                                RequestContext.getExecutionTime(request),
+                                ex.getMessage(),
+                                request.getRequestURI(),
+                                null
+                        )
+                );
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ApiResponse<Object>> handleUserNotFoundError(UsernameNotFoundException ex,
+                                                                       HttpServletRequest request) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(
+                        ApiResponse.prepare(
+                                RequestContext.getRequestId(request),
+                                RequestContext.getExecutionTime(request),
+                                ex.getMessage(),
+                                request.getRequestURI(),
+                                null
                         )
                 );
     }

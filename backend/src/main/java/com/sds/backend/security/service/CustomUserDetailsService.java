@@ -1,7 +1,8 @@
-package com.sds.backend.security;
+package com.sds.backend.security.service;
 
 import com.sds.backend.entity.User;
 import com.sds.backend.repository.UserDAO;
+import com.sds.backend.security.model.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

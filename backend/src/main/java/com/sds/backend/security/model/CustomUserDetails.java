@@ -1,4 +1,4 @@
-package com.sds.backend.security;
+package com.sds.backend.security.model;
 
 import com.sds.backend.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -47,5 +47,9 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
+    }
+
+    public User getUser() {
+        return user;
     }
 }

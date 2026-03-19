@@ -1,7 +1,7 @@
 package com.sds.backend.service;
 
-import com.sds.backend.dto.RegisterUserRequest;
-import com.sds.backend.dto.UserResponse;
+import com.sds.backend.dto.request.RegisterUserRequest;
+import com.sds.backend.dto.response.UserResponse;
 import com.sds.backend.entity.User;
 import com.sds.backend.enums.UserRole;
 import com.sds.backend.exception.BadRequestException;
