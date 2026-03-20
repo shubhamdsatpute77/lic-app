@@ -1,11 +1,11 @@
-package com.sds.backend.security.service;
+package com.sds.backend.auth.service;
 
-import com.sds.backend.dto.request.LoginRequest;
-import com.sds.backend.dto.request.RegisterUserRequest;
+import com.sds.backend.auth.dto.request.LoginRequest;
+import com.sds.backend.auth.dto.request.RegisterUserRequest;
 import com.sds.backend.dto.response.UserResponse;
 import com.sds.backend.mapper.UserMapper;
-import com.sds.backend.security.model.AuthResponse;
-import com.sds.backend.security.model.CustomUserDetails;
+import com.sds.backend.auth.dto.response.AuthResponse;
+import com.sds.backend.auth.dto.CustomUserDetails;
 import com.sds.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

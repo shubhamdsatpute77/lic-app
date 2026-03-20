@@ -1,7 +1,7 @@
-package com.sds.backend.security.filter;
+package com.sds.backend.auth.filter;
 
-import com.sds.backend.security.service.CustomUserDetailsService;
-import com.sds.backend.security.service.JwtService;
+import com.sds.backend.auth.service.CustomUserDetailsService;
+import com.sds.backend.auth.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,4 +1,4 @@
-package com.sds.backend.dto.request;
+package com.sds.backend.auth.dto.request;
 
 import com.sds.backend.enums.UserRole;
 import com.sds.backend.validators.ValidRegisterUserRequest;

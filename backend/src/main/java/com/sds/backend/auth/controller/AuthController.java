@@ -1,10 +1,10 @@
-package com.sds.backend.controller;
+package com.sds.backend.auth.controller;
 
 import com.sds.backend.common.ApiResponseMeta;
-import com.sds.backend.dto.request.LoginRequest;
-import com.sds.backend.dto.request.RegisterUserRequest;
-import com.sds.backend.security.model.AuthResponse;
-import com.sds.backend.security.service.AuthService;
+import com.sds.backend.auth.dto.request.LoginRequest;
+import com.sds.backend.auth.dto.request.RegisterUserRequest;
+import com.sds.backend.auth.dto.response.AuthResponse;
+import com.sds.backend.auth.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

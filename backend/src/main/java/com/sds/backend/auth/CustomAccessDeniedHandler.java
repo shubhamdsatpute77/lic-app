@@ -1,4 +1,4 @@
-package com.sds.backend.security;
+package com.sds.backend.auth;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

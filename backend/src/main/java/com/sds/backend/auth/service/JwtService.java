@@ -1,4 +1,4 @@
-package com.sds.backend.security.service;
+package com.sds.backend.auth.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

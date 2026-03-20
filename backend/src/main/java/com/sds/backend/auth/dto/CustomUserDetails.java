@@ -1,4 +1,4 @@
-package com.sds.backend.security.model;
+package com.sds.backend.auth.dto;
 
 import com.sds.backend.entity.User;
 import lombok.RequiredArgsConstructor;

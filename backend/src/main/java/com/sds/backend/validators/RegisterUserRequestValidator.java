@@ -1,6 +1,6 @@
 package com.sds.backend.validators;
 
-import com.sds.backend.dto.request.RegisterUserRequest;
+import com.sds.backend.auth.dto.request.RegisterUserRequest;
 import com.sds.backend.enums.UserRole;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

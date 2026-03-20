@@ -1,4 +1,4 @@
-package com.sds.backend.security.model;
+package com.sds.backend.auth.dto.response;
 
 import com.sds.backend.dto.response.UserResponse;
 

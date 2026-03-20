@@ -1,7 +1,7 @@
 package com.sds.backend.config;
 
-import com.sds.backend.security.CustomAccessDeniedHandler;
-import com.sds.backend.security.filter.JwtAuthenticationFilter;
+import com.sds.backend.auth.CustomAccessDeniedHandler;
+import com.sds.backend.auth.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
