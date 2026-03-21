@@ -5,6 +5,7 @@ import com.sds.backend.auth.dto.request.RefreshTokenRequest;
 import com.sds.backend.auth.entity.RefreshToken;
 import com.sds.backend.auth.repository.RefreshTokenDAO;
 import com.sds.backend.entity.User;
+import com.sds.backend.exception.UnauthorizedException;
 import com.sds.backend.repository.UserDAO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,22 +33,28 @@ public class RefreshTokenService {
     }
 
     public RefreshToken verifyRefreshToken(RefreshTokenRequest request) {
-        User user = userDAO.findByEmail(request.email())
-                .orElseThrow(() -> new RuntimeException("User not found with refresh token"));
-        RefreshToken refreshToken = refreshTokenDAO.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Invalid refresh token"));
+        User user = getUserByEmail(request.email());
+        RefreshToken refreshToken = getRefreshToken(user);
         if (!refreshToken.getToken().equals(request.refreshToken())
                 || refreshToken.getExpiryDate().isBefore(LocalDateTime.now())) {
-            throw new RuntimeException("Refresh accessToken expired");
+            throw new UnauthorizedException("Invalid or expired refresh token");
         }
         return createRefreshToken(user);
     }
 
     public void invalidateRefreshToken(LogoutRequest request) {
-        User user = userDAO.findByEmail(request.email())
-                .orElseThrow(() -> new RuntimeException("User not found with refresh token"));
-        RefreshToken token = refreshTokenDAO.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("No session found for user"));
+        User user = getUserByEmail(request.email());
+        RefreshToken token = getRefreshToken(user);
         refreshTokenDAO.delete(token);
+    }
+
+    public RefreshToken getRefreshToken(User user) {
+        return refreshTokenDAO.findByUser(user)
+                .orElseThrow(() -> new UnauthorizedException("Invalid refresh token"));
+    }
+
+    public User getUserByEmail(String email) {
+        return userDAO.findByEmail(email)
+                .orElseThrow(() -> new UnauthorizedException("Invalid user"));
     }
 }

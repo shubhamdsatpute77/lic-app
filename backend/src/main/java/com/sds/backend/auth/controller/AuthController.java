@@ -35,13 +35,13 @@ public class AuthController {
     }
 
     @PostMapping("refresh")
-    public ResponseEntity<AuthResponse> refresh(@RequestBody RefreshTokenRequest request) {
+    public ResponseEntity<AuthResponse> refresh(@Valid @RequestBody RefreshTokenRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(authService.refresh(request));
     }
 
     @PostMapping("logout")
-    public ResponseEntity<String> logout(@RequestBody LogoutRequest request) {
+    public ResponseEntity<String> logout(@Valid @RequestBody LogoutRequest request) {
         authService.logout(request);
-        return ResponseEntity.status(HttpStatus.OK).body("Logged out successfully");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Logged out successfully");
     }
 }

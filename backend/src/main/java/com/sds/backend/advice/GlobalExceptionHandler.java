@@ -4,6 +4,7 @@ import com.sds.backend.common.ApiResponse;
 import com.sds.backend.common.RequestContext;
 import com.sds.backend.exception.BadRequestException;
 import com.sds.backend.exception.ResourceNotFoundException;
+import com.sds.backend.exception.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -89,6 +90,22 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ApiResponse<Object>> handleUserNotFoundError(UsernameNotFoundException ex,
+                                                                       HttpServletRequest request) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(
+                        ApiResponse.prepare(
+                                RequestContext.getRequestId(request),
+                                RequestContext.getExecutionTime(request),
+                                ex.getMessage(),
+                                request.getRequestURI(),
+                                null
+                        )
+                );
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ApiResponse<Object>> handleUnauthorizedError(UnauthorizedException ex,
                                                                        HttpServletRequest request) {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
