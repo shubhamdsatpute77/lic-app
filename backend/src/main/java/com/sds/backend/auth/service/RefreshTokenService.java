@@ -25,7 +25,7 @@ public class RefreshTokenService {
     private final UserDAO userDAO;
 
     public RefreshToken createRefreshToken(User user) {
-        RefreshToken token = refreshTokenDAO.findByUser(user).orElse(new RefreshToken());
+        RefreshToken token = new RefreshToken();
         token.setUser(user);
         token.setToken(UUID.randomUUID().toString());
         token.setExpiryDate(LocalDateTime.now().plusDays(expirationDays));
@@ -35,8 +35,10 @@ public class RefreshTokenService {
     public RefreshToken verifyRefreshToken(RefreshTokenRequest request) {
         User user = getUserByEmail(request.email());
         RefreshToken refreshToken = getRefreshToken(user);
-        if (!refreshToken.getToken().equals(request.refreshToken())
-                || refreshToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+        if (!refreshToken.getToken().equals(request.refreshToken())) {
+            if (refreshToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+                refreshTokenDAO.delete(refreshToken);
+            }
             throw new UnauthorizedException("Invalid or expired refresh token");
         }
         return createRefreshToken(user);
