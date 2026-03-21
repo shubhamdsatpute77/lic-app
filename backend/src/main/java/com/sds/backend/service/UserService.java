@@ -1,7 +1,6 @@
 package com.sds.backend.service;
 
 import com.sds.backend.auth.dto.request.RegisterUserRequest;
-import com.sds.backend.dto.response.UserResponse;
 import com.sds.backend.entity.User;
 import com.sds.backend.enums.UserRole;
 import com.sds.backend.exception.BadRequestException;
@@ -21,7 +20,7 @@ public class UserService {
     private final UserDAO userDAO;
     private final PasswordEncoder passwordEncoder;
 
-    public UserResponse register(RegisterUserRequest registerUserRequest) {
+    public User register(RegisterUserRequest registerUserRequest) {
         if (userDAO.existsByEmail(registerUserRequest.email())) {
             throw new BadRequestException("User with email already exist", registerUserRequest);
         }
@@ -37,6 +36,6 @@ public class UserService {
         User user = UserMapper.toEntity(registerUserRequest, manager);
         user.setPassword(passwordEncoder.encode(registerUserRequest.password()));
         userDAO.save(user);
-        return UserMapper.toResponse(user);
+        return user;
     }
 }

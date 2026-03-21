@@ -1,5 +1,6 @@
 package com.sds.backend.auth.controller;
 
+import com.sds.backend.auth.dto.request.RefreshTokenRequest;
 import com.sds.backend.common.ApiResponseMeta;
 import com.sds.backend.auth.dto.request.LoginRequest;
 import com.sds.backend.auth.dto.request.RegisterUserRequest;
@@ -30,5 +31,10 @@ public class AuthController {
     @PostMapping("login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(authService.login(request));
+    }
+
+    @PostMapping("refresh")
+    public ResponseEntity<AuthResponse> refresh(@RequestBody RefreshTokenRequest request) {
+        return ResponseEntity.status(HttpStatus.OK).body(authService.refresh(request));
     }
 }

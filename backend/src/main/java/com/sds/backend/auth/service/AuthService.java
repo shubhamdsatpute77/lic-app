@@ -1,8 +1,10 @@
 package com.sds.backend.auth.service;
 
 import com.sds.backend.auth.dto.request.LoginRequest;
+import com.sds.backend.auth.dto.request.RefreshTokenRequest;
 import com.sds.backend.auth.dto.request.RegisterUserRequest;
-import com.sds.backend.dto.response.UserResponse;
+import com.sds.backend.auth.entity.RefreshToken;
+import com.sds.backend.entity.User;
 import com.sds.backend.mapper.UserMapper;
 import com.sds.backend.auth.dto.response.AuthResponse;
 import com.sds.backend.auth.dto.CustomUserDetails;
@@ -20,11 +22,13 @@ public class AuthService {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final RefreshTokenService refreshTokenService;
 
     public AuthResponse register(RegisterUserRequest request) {
-        UserResponse userResponse = userService.register(request);
+        User user = userService.register(request);
         String token = jwtService.generateToken(request.email());
-        return new AuthResponse(token, userResponse);
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
+        return new AuthResponse(token, refreshToken.getToken(), UserMapper.toResponse(user));
     }
 
     public AuthResponse login(LoginRequest request) {
@@ -36,6 +40,14 @@ public class AuthService {
         );
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         String token = jwtService.generateToken(request.email());
-        return new AuthResponse(token, UserMapper.toResponse(customUserDetails.getUser()));
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(customUserDetails.getUser());
+        return new AuthResponse(token, refreshToken.getToken(), UserMapper.toResponse(customUserDetails.getUser()));
+    }
+
+    public AuthResponse refresh(RefreshTokenRequest request) {
+        RefreshToken refreshToken = refreshTokenService.verifyRefreshToken(request);
+        User user = refreshToken.getUser();
+        String newAccessToken = jwtService.generateToken(user.getEmail());
+        return new AuthResponse(newAccessToken, request.refreshToken(), UserMapper.toResponse(user));
     }
 }
