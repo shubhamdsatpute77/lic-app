@@ -1,5 +1,6 @@
 package com.sds.backend.auth.controller;
 
+import com.sds.backend.auth.dto.request.LogoutRequest;
 import com.sds.backend.auth.dto.request.RefreshTokenRequest;
 import com.sds.backend.common.ApiResponseMeta;
 import com.sds.backend.auth.dto.request.LoginRequest;
@@ -36,5 +37,11 @@ public class AuthController {
     @PostMapping("refresh")
     public ResponseEntity<AuthResponse> refresh(@RequestBody RefreshTokenRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(authService.refresh(request));
+    }
+
+    @PostMapping("logout")
+    public ResponseEntity<String> logout(@RequestBody LogoutRequest request) {
+        authService.logout(request);
+        return ResponseEntity.status(HttpStatus.OK).body("Logged out successfully");
     }
 }

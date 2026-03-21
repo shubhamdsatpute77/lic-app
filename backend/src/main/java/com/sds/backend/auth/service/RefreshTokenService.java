@@ -1,5 +1,6 @@
 package com.sds.backend.auth.service;
 
+import com.sds.backend.auth.dto.request.LogoutRequest;
 import com.sds.backend.auth.dto.request.RefreshTokenRequest;
 import com.sds.backend.auth.entity.RefreshToken;
 import com.sds.backend.auth.repository.RefreshTokenDAO;
@@ -39,6 +40,14 @@ public class RefreshTokenService {
                 || refreshToken.getExpiryDate().isBefore(LocalDateTime.now())) {
             throw new RuntimeException("Refresh accessToken expired");
         }
-        return refreshToken;
+        return createRefreshToken(user);
+    }
+
+    public void invalidateRefreshToken(LogoutRequest request) {
+        User user = userDAO.findByEmail(request.email())
+                .orElseThrow(() -> new RuntimeException("User not found with refresh token"));
+        RefreshToken token = refreshTokenDAO.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("No session found for user"));
+        refreshTokenDAO.delete(token);
     }
 }

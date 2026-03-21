@@ -1,6 +1,7 @@
 package com.sds.backend.auth.service;
 
 import com.sds.backend.auth.dto.request.LoginRequest;
+import com.sds.backend.auth.dto.request.LogoutRequest;
 import com.sds.backend.auth.dto.request.RefreshTokenRequest;
 import com.sds.backend.auth.dto.request.RegisterUserRequest;
 import com.sds.backend.auth.entity.RefreshToken;
@@ -49,5 +50,9 @@ public class AuthService {
         User user = refreshToken.getUser();
         String newAccessToken = jwtService.generateToken(user.getEmail());
         return new AuthResponse(newAccessToken, request.refreshToken(), UserMapper.toResponse(user));
+    }
+
+    public void logout(LogoutRequest request) {
+        refreshTokenService.invalidateRefreshToken(request);
     }
 }
