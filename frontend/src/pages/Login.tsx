@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { api } from '../api';
 import { useNavigate } from 'react-router-dom';
-import { LoginResponse } from '../types/auth';
+import type { LoginResponse } from '../types/auth';
 
 function Login() {
   const [email, setEmail] = useState("");
